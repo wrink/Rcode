@@ -1,0 +1,32 @@
+html, body, section, .full-height{
+    background-color: #131618;
+    height: 100%;
+    padding: 1em;
+}
+
+.container-fluid {
+    height: 100%;
+}
+
+.panel-default {
+    background-color: #131618;
+    border: 5px solid #1c2127;
+}
+
+.panel-header, .panel-footer {
+    background-color: #1c2127;
+} 
+
+#editor{
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    color: rgb(154, 171, 193);
+
+    
+    overflow: auto;
+    outline: none;
+    resize: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}

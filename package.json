@@ -1,0 +1,12 @@
+{
+  "name": "Rcode",
+  "version": "0.0.1",
+  "description": "a basic online text editor",
+  "dependencies": {
+    "express": "^4.10.2",
+    "jquery": "^2.1.4",
+    "redis": "^1.0.0",
+    "share": "^0.7.40",
+    "socket.io": "^1.3.6"
+  }
+}

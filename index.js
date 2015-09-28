@@ -1,4 +1,4 @@
-var express = require('express')
+var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -9,6 +9,16 @@ app.use(express.static(__dirname));
 
 var text;
 var file = 'file.txt';
+
+//change 0
+function newUpdate(html, caret, key)
+{
+	return {
+		html: html,
+		caret: caret,
+		key: key
+	};
+}
 
 fs.readFile(file, function(err, data) {
 	if (err) {
@@ -29,17 +39,20 @@ fs.readFile(file, function(err, data) {
 	io.on('connection', function(socket){
 		console.log('a user connected: ', socket.id);
 
-		io.emit('update', toHTML(text));
+		//change 1
+		io.emit('update', newUpdate(toHTML(text), { begin: 0, end: 0}, 0));
 
 		socket.on('disconnect', function() {
   		  console.log('user disconnected');
   		});
 
   		socket.on('update', function(update) {
-  			text = update;
+  			//change 2
+  			text = update.html;
   			fs.writeFileSync(file, text);
 
-  			io.emit ('update', toHTML(text));
+  			//change 3
+  			io.emit ('update', newUpdate(toHTML(text), update.caret, update.key));
   		});
 	});
 

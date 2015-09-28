@@ -1,5 +1,14 @@
 var socket = io();
 
+function newUpdate(html, caret, key)
+{
+	return {
+		html: html,
+		caret: caret,
+		key: key
+	};
+}
+
 $.fn.caret = function () {
 	var caretOffset = 0;
 	var endCaretOffset = 0;
@@ -29,8 +38,9 @@ $.fn.caret = function () {
 $(document).ready(function() {
 	console.log(document.location.pathname);
 
-	$('#editor').keyup(function() {
-		socket.emit('update', $(this)[0].innerText);
+	$('#editor').keyup(function(event) {
+		//change 4
+		socket.emit('update', newUpdate($(this)[0].innerText, $('#editor').caret(), event.keyCode));
 	});
 
 	$('#editor').keydown(function(event) {
@@ -82,6 +92,13 @@ $(document).ready(function() {
 	});*/
 
 	socket.on('update', function(update) {
-		$('#editor')[0].innerHTML = update;
+		//change 5
+		curCaret = $('#editor').caret;
+
+		$('#editor')[0].innerHTML = update.html;
+
+		if (update.caret.begin > curCaret.end) {
+			//TODO: set caret
+		}
 	});
 });

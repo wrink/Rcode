@@ -11,7 +11,10 @@ var text;
 var file = 'file.txt';
 
 fs.readFile(file, function(err, data) {
-	if (err) text = '';
+	if (err) {
+		text = '';
+		console.log(err);
+	}
 	else text = data.toString('utf8');
 
 	fs.writeFileSync(file, text);
@@ -26,7 +29,7 @@ fs.readFile(file, function(err, data) {
 	io.on('connection', function(socket){
 		console.log('a user connected: ', socket.id);
 
-		io.emit('update', text);
+		io.emit('update', toHTML(text));
 
 		socket.on('disconnect', function() {
   		  console.log('user disconnected');
@@ -61,5 +64,4 @@ function toHTML (html) {
     .replace(/'/g, '&#39;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
-		
 }

@@ -21,10 +21,11 @@ html, body, section, .full-height{
     font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
     color: rgb(154, 171, 193);
 
-    
+    display: inline-block;    
     overflow: auto;
     outline: none;
     resize: none;
+    white-space: pre-wrap;
 
     -webkit-box-shadow: none;
     -moz-box-shadow: none;

@@ -36,18 +36,28 @@ $.fn.caret = function () {
 	return { begin: caretOffset, end: endCaretOffset };
 };
 
-/*$.fn.setCaret = function (index) {
+$.fn.setCaret = function (start, end) {
+	var startCounter = start;
+	var endCounter = end;
 	var doc = this[0].ownerDocument || this[0].document;
 	var win = doc.defaultView || doc.parentWindow;
-	var sel = doc.selection;
-	var textRange = sel.createRange;
-	range = doc.createRange();
-	range.setStart(this[0].firstChild, 0);
-	range
-	if (sel.rangeCount > 0) {
-		sel.removeAllRanges();
+	var range = doc.createRange();
+	var sel = win.getSelection();
+	var nodes = this[0].childNodes;
+	for (var i=0; i<nodes.length && startCounter>0; i++)
+	{
+		if(nodes[i].textContent.length < startCounter) startCounter -= nodes[i].textContent.length;
+		else range.setStart(nodes[i], startCounter);
 	}
-};*/
+	for (var i=0; i<nodes.length && endCounter>0; i++)
+	{
+		if(nodes[i].textContent.length < endCounter) endCounter -= nodes[i].textContent.length;
+		else range.setEnd(nodes[i], endCounter);
+	}
+
+	sel.removeAllRanges();
+	sel.addRange(range);
+};
 
 $(document).ready(function() {
 	console.log(document.location.pathname);
@@ -59,20 +69,12 @@ $(document).ready(function() {
 
 	$('#editor').keydown(function(event) {
 		if (event.keyCode === 9) {
-			var caret = $(this).caret();
-
 			event.preventDefault();
 			document.execCommand('insertText', false, '\t');
-
-			$(this).setCaret(caret.begin + 1);
 		}
 		else if (event.keyCode === 13) {
-			var caret = $(this).caret();
-
 			event.preventDefault();
 			document.execCommand('insertText', false, '\n');
-
-			$(this).setCaret(caret.begin + 1);
 		}
 	});
 
@@ -123,8 +125,15 @@ $(document).ready(function() {
 
 		$('#editor')[0].innerHTML = update.html;
 
-		if (update.caret.begin > curCaret.end) {
-			//TODO: set caret
+		if (curCaret.begin > update.caret.end)
+		{
+			var diff = (update.caret.begin - update.caret.end) + 1;
+			if (update.key == 8 || update.key == 46) diff -= 2;
+			else if (update.key == 9 || update.key == 13);
+			else if (update.key < 48) diff--;
+
+			$('#editor').setCaret(curCaret.begin + diff, curCaret.end + diff);
 		}
+		else $('#editor').setCaret(curCaret.begin, curCaret.end);
 	});
 });

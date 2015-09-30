@@ -43,17 +43,27 @@ $.fn.setCaret = function (start, end) {
 	var win = doc.defaultView || doc.parentWindow;
 	var range = doc.createRange();
 	var sel = win.getSelection();
-	var nodes = this[0].childNodes;
-	for (var i=0; i<nodes.length && startCounter>0; i++)
-	{
-		if(nodes[i].textContent.length < startCounter) startCounter -= nodes[i].textContent.length;
-		else range.setStart(nodes[i], startCounter);
-	}
-	for (var i=0; i<nodes.length && endCounter>0; i++)
-	{
-		if(nodes[i].textContent.length < endCounter) endCounter -= nodes[i].textContent.length;
-		else range.setEnd(nodes[i], endCounter);
-	}
+	var childNodes = this[0].childNodes;
+	var start = function(nodes) {
+		for (var i=0; i<nodes.length && startCounter>0; i++)
+		{
+			if (nodes[i].childNodes.length > 0) start(nodes[i].childNodes);
+			else if (nodes[i].textContent.length < startCounter) startCounter -= nodes[i].textContent.length;
+			else range.setStart(nodes[i], startCounter);
+		}
+	};
+	
+	var end = function(nodes) {
+		for (var i=0; i<nodes.length && endCounter>0; i++)
+		{
+			if (nodes[i].childNodes.length > 0) start(nodes[i].childNodes);
+			else if (nodes[i].textContent.length < endCounter) endCounter -= nodes[i].textContent.length;
+			else range.setEnd(nodes[i], endCounter);
+		}
+	};
+
+	start(childNodes);
+	end(childNodes);
 
 	sel.removeAllRanges();
 	sel.addRange(range);

@@ -1,7 +1,13 @@
-html, body, section, .full-height{
+html, body, section, .full-height {
     background-color: #131618;
     height: 100%;
     padding: 1em;
+}
+
+pre, code {
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .container-fluid {
@@ -25,7 +31,7 @@ html, body, section, .full-height{
     overflow: auto;
     outline: none;
     resize: none;
-    white-space: pre-wrap;
+    white-space: pre;
 
     -webkit-box-shadow: none;
     -moz-box-shadow: none;

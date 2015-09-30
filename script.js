@@ -1,5 +1,42 @@
 var socket = io();
 
+var savedRange = saveSelection();
+var isInFocus;
+function saveSelection()
+{
+    if(window.getSelection)//non IE Browsers
+    {
+        savedRange = window.getSelection().getRangeAt(0);
+    }
+    else if(document.selection)//IE
+    { 
+        savedRange = document.selection.createRange();  
+    } 
+}
+
+function restoreSelection()
+{
+    isInFocus = true;
+    document.getElementById("editor").focus();
+    if (savedRange != null) {
+        if (window.getSelection)//non IE and there is already a selection
+        {
+            var s = window.getSelection();
+            if (s.rangeCount > 0) 
+                s.removeAllRanges();
+            s.addRange(savedRange);
+        }
+        else if (document.createRange)//non IE and no selection
+        {
+            window.getSelection().addRange(savedRange);
+        }
+        else if (document.selection)//IE
+        {
+            savedRange.select();
+        }
+    }
+}
+
 $.fn.caret = function () {
 	var caretOffset = 0;
 	var endCaretOffset = 0;
@@ -34,9 +71,17 @@ $(document).ready(function() {
 	});
 
 	$('#editor').keydown(function(event) {
+		var selRange = saveSelection();
+
 		if (event.keyCode === 9) {
 			event.preventDefault();
 			document.execCommand('insertText', false, '\t');
+			restoreSelection(selRange);
+		}
+		else if (event.keyCode === 13) {
+			event.preventDefault();
+			document.execCommand('insertText', false, '\n');
+			restoreSelection(selRange);
 		}
 	});
 

@@ -22,7 +22,8 @@ $.fn.caret = function () {
 	        var preCaretRange = range.cloneRange();
 	        preCaretRange.selectNodeContents(this[0]);
 	        preCaretRange.setEnd(range.endContainer, range.endOffset);
-	        caretOffset = preCaretRange.toString().length;
+	        endCaretOffset = preCaretRange.toString().length;
+	        caretOffset = endCaretOffset - sel.toString().length;
 	    }
 	} else if ( (sel = doc.selection) && sel.type != "Control") {
 	    var textRange = sel.createRange();
@@ -32,21 +33,46 @@ $.fn.caret = function () {
 	    caretOffset = preCaretTextRange.text.length;
 	    endCaretOffset = caretOffset;
 	}
-	return { begin: caretOffset, end: caretOffset };
+	return { begin: caretOffset, end: endCaretOffset };
 };
+
+/*$.fn.setCaret = function (index) {
+	var doc = this[0].ownerDocument || this[0].document;
+	var win = doc.defaultView || doc.parentWindow;
+	var sel = doc.selection;
+	var textRange = sel.createRange;
+	range = doc.createRange();
+	range.setStart(this[0].firstChild, 0);
+	range
+	if (sel.rangeCount > 0) {
+		sel.removeAllRanges();
+	}
+};*/
 
 $(document).ready(function() {
 	console.log(document.location.pathname);
 
 	$('#editor').keyup(function(event) {
 		//change 4
-		socket.emit('update', newUpdate($(this)[0].innerText, $('#editor').caret(), event.keyCode));
+		socket.emit('update', newUpdate(this.innerText, $(this).caret(), event.keyCode));
 	});
 
 	$('#editor').keydown(function(event) {
 		if (event.keyCode === 9) {
+			var caret = $(this).caret();
+
 			event.preventDefault();
 			document.execCommand('insertText', false, '\t');
+
+			$(this).setCaret(caret.begin + 1);
+		}
+		else if (event.keyCode === 13) {
+			var caret = $(this).caret();
+
+			event.preventDefault();
+			document.execCommand('insertText', false, '\n');
+
+			$(this).setCaret(caret.begin + 1);
 		}
 	});
 
@@ -93,7 +119,7 @@ $(document).ready(function() {
 
 	socket.on('update', function(update) {
 		//change 5
-		curCaret = $('#editor').caret;
+		curCaret = $('#editor').caret();
 
 		$('#editor')[0].innerHTML = update.html;
 

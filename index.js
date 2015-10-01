@@ -1,4 +1,4 @@
-var express = require('express')
+var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -9,6 +9,15 @@ app.use(express.static(__dirname));
 
 var text;
 var file = 'file.txt';
+
+function newUpdate(html, caret, key)
+{
+	return {
+		html: html,
+		caret: caret,
+		key: key
+	};
+}
 
 fs.readFile(file, function(err, data) {
 	if (err) {
@@ -29,17 +38,17 @@ fs.readFile(file, function(err, data) {
 	io.on('connection', function(socket){
 		console.log('a user connected: ', socket.id);
 
-		io.emit('update', toHTML(text));
+		io.emit('update', newUpdate(text, { begin: 0, end: 0}, 0));
 
 		socket.on('disconnect', function() {
   		  console.log('user disconnected');
   		});
 
   		socket.on('update', function(update) {
-  			text = update;
+  			text = update.html;
   			fs.writeFileSync(file, text);
 
-  			io.emit ('update', toHTML(text));
+  			io.emit ('update', newUpdate(text, update.caret, update.key));
   		});
 	});
 
@@ -48,20 +57,3 @@ fs.readFile(file, function(err, data) {
 		console.log('listening on *:3000');
 	});
 });
-
-
-/*
- * Escape all special charactersin html
- * Use BEFORE formatting
- * 
- * @param	{String} html
- * @return	{String}
- */
-function toHTML (html) {
-	return String(html)
-	.replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}

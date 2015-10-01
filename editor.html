@@ -8,9 +8,12 @@
 		
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" href="node_modules/highlight.js/styles/monokai.css">
 
 		<script src="socket.io/socket.io.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/highlight.min.js"></script>
+
 
 		<script src="script.js"></script>
 	</head>
@@ -19,7 +22,8 @@
 		<div class="container-fluid">
 			<div class="panel panel-default col-md-8 full-height">
 				<div class="panel-body full-height">
-					<div class="full-height" id="editor" contenteditable="true"></div>
+					<div class="full-height" id="editor" contenteditable="true" spellcheck="false">
+					</div>
 				</div>
 			</div>
 		</div>

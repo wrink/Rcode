@@ -87,17 +87,10 @@ $(document).ready(function() {
 	});
 
 	$('#editor').keydown(function(event) {
-		var selRange = saveSelection();
 
 		if (event.keyCode === 9) {
 			event.preventDefault();
 			document.execCommand('insertText', false, '\t');
-			restoreSelection(selRange);
-		}
-		else if (event.keyCode === 13) {
-			event.preventDefault();
-			document.execCommand('insertText', false, '\n');
-			restoreSelection(selRange);
 		}
 		else if (event.keyCode === 13) {
 			event.preventDefault();

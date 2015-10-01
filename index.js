@@ -10,7 +10,6 @@ app.use(express.static(__dirname));
 var text;
 var file = 'file.txt';
 
-//change 0
 function newUpdate(html, caret, key)
 {
 	return {
@@ -39,20 +38,17 @@ fs.readFile(file, function(err, data) {
 	io.on('connection', function(socket){
 		console.log('a user connected: ', socket.id);
 
-		//change 1
-		io.emit('update', newUpdate(toHTML(text), { begin: 0, end: 0}, 0));
+		io.emit('update', newUpdate(text, { begin: 0, end: 0}, 0));
 
 		socket.on('disconnect', function() {
   		  console.log('user disconnected');
   		});
 
   		socket.on('update', function(update) {
-  			//change 2
   			text = update.html;
   			fs.writeFileSync(file, text);
 
-  			//change 3
-  			io.emit ('update', newUpdate(toHTML(text), update.caret, update.key));
+  			io.emit ('update', newUpdate(text, update.caret, update.key));
   		});
 	});
 
@@ -61,20 +57,3 @@ fs.readFile(file, function(err, data) {
 		console.log('listening on *:3000');
 	});
 });
-
-
-/*
- * Escape all special charactersin html
- * Use BEFORE formatting
- * 
- * @param	{String} html
- * @return	{String}
- */
-function toHTML (html) {
-	return String(html)
-	.replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}

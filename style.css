@@ -1,7 +1,10 @@
 html, body, section, .full-height{
     background-color: #131618;
     height: 100%;
-    padding: 1em;
+}
+
+body, .panel-body {
+    padding: 1.5em;
 }
 
 .container-fluid {
@@ -11,6 +14,7 @@ html, body, section, .full-height{
 .panel-default {
     background-color: #131618;
     border: 5px solid #1c2127;
+    padding: 0;
 }
 
 .panel-header, .panel-footer {
@@ -20,6 +24,8 @@ html, body, section, .full-height{
 #editor{
     font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
     color: rgb(154, 171, 193);
+
+    tab-size: 3;
 
     display: inline-block;    
     overflow: auto;

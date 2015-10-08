@@ -4,6 +4,7 @@
   "description": "a basic online text editor",
   "dependencies": {
     "express": "^4.10.2",
+    "jade": "^1.11.0",
     "jquery": "^2.1.4",
     "redis": "^1.0.0",
     "share": "^0.7.40",

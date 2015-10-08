@@ -1,10 +1,19 @@
 html, body, section, .full-height{
     background-color: #131618;
     height: 100%;
+    overflow: hidden;
+
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    color: rgb(154, 171, 193);
+    tab-size: 3;
 }
 
 body, .panel-body {
     padding: 1.5em;
+}
+
+.panel-body {
+    overflow: auto;
 }
 
 .container-fluid {
@@ -19,15 +28,47 @@ body, .panel-body {
 
 .panel-header, .panel-footer {
     background-color: #1c2127;
-} 
+}
 
-#editor{
-    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
-    color: rgb(154, 171, 193);
+#editor {
 
-    tab-size: 3;
+    display: inline-block;
+    overflow: auto;
+    outline: none;
+    resize: none;
+    white-space: pre-wrap;
 
-    display: inline-block;    
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.icons {
+    float: left;
+    position: static;
+    padding: 2.5%;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    text-align: center;
+    max-height: 135px;
+}
+
+.tag {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.glyphicon {
+    font-size: 5em;
+}
+
+.center-frame {
+    display: inline-block;
     overflow: auto;
     outline: none;
     resize: none;

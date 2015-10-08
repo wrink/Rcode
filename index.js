@@ -7,9 +7,10 @@ var request = require('request');
 var bodyParser = require('body-parser');
 var upload = require('multer')();
 var path = require('path');
-var rm = require('rimraf');
+var rmdir = require('rimraf');
+var mkdir = require('mkdirp');
 
-var isFile = /.*\..*/i;
+var isFile = /.*\.[a-zA-Z0-9]+/i;
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json()); // for parsing application/json
@@ -99,36 +100,57 @@ app.post('/file', upload.array(), function(req, res) {
 });
 
 io.on('connection', function(socket) {
-			console.log('a user connected: ', socket.id);
+	console.log('a user connected: ', socket.id);
 
-			socket.on('disconnect', function() {
-				console.log('user disconnected');
-			});
+	socket.on('disconnect', function() {
+		console.log('user disconnected');
+	});
 
-			socket.on('update', function(update) {
-				text = update.html;
-				fs.writeFileSync(file, text);
+	socket.on('update', function(update) {
+		text = update.html;
+		fs.writeFileSync(file, text);
 
-				io.emit ('update', newUpdate(text, update.caret, update.key));
-			});
+		io.emit ('update', newUpdate(text, update.caret, update.key));
+	});
 
-			socket.on('file-move-update', function(update) {
-				console.log(typeof update.filedir + " " + typeof update.file);
-				fs.rename(path.normalize(update.filedir), path.normalize(update.dir + '/' + update.file), function(err, stats) {
-					if (err) throw err;
-					update.newFileDir = update.filedir, update.dir + '/' + update.file;
+	socket.on('file-move-update', function(update) {
+		console.log(typeof update.filedir + " " + typeof update.file);
+		fs.rename(update.filedir, update.dir + '/' + update.file, function(err, stats) {
+			if (err) throw err;
+			update.newFileDir = update.filedir, update.dir + '/' + update.file;
 
-					io.emit('file-move-update', update);
-				});
-			});
-
-			socket.on('file-delete-update', function(update) {
-				rm(path.normalize(update), function(err) {
-					console.log(err);
-					io.emit('file-delete-update', update);
-				});
-			});
+			io.emit('file-move-update', update);
 		});
+	});
+
+	socket.on('file-delete-update', function(update) {
+		rmdir(path.normalize(update), function(err) {
+			console.log(err);
+			io.emit('file-delete-update', update);
+		});
+	});
+
+	socket.on('new-file-update', function(update) {
+		fs.stat(update.file, function(err){
+			if (err) {
+				if (isFile.test(update.file)) {
+					fs.writeFile(update.file, '', function(err) {
+						if (err) console.log(err);
+						io.emit('new-file-update', update.dir);
+					});
+				} else {
+					mkdir(update.file, function(err) {
+						if (err) console.log(err);
+						io.emit('new-file-update', update.dir);
+					});
+				}
+			} else {
+				io.to(socket.id).emit('already-exists-error');
+				console.log('error');
+			}
+		});
+	});	
+});
 
 http.listen(3000, function() {
 	console.log('listening on *:3000');

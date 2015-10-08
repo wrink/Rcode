@@ -12,6 +12,26 @@ body, .panel-body {
     padding: 1.5em;
 }
 
+button {
+    outline: none;
+}
+
+input::-webkit-input-placeholder {
+color: rgba(154, 171, 193, 0.3) !important;
+}
+ 
+input:-moz-placeholder { /* Firefox 18- */
+color: rgba(154, 171, 193, 0.3) !important;  
+}
+ 
+input::-moz-placeholder {  /* Firefox 19+ */
+color: rgba(154, 171, 193, 0.3) !important;  
+}
+ 
+input:-ms-input-placeholder {  
+color: rgba(154, 171, 193, 0.3) !important;  
+}
+
 .panel-body {
     overflow: auto;
 }
@@ -28,6 +48,38 @@ body, .panel-body {
 
 .panel-header, .panel-footer {
     background-color: #1c2127;
+}
+
+.modal-content {
+    background-color: #131618;
+    border-color: 0;
+}
+
+.modal-header {
+    border-bottom: 3px solid #1c2127;
+}
+
+.alert {
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0)!important;
+    border-width: 3px;
+}
+
+.alert-danger {
+    border-color: #a94442;
+}
+
+.input-group-addon, .form-control {
+    background-color: #131618;
+    border-color: #1c2127;
+    border-width: 3px;
+    color: rgb(154, 171, 193)!important;
+}
+
+.close {
+    color: rgb(154, 171, 193)!important;
+    text-shadow: none;
+    opacity: 1;
 }
 
 #editor {

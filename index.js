@@ -108,7 +108,7 @@ io.on('connection', function(socket) {
 
 	socket.on('update', function(update) {
 		text = update.html;
-		fs.writeFileSync(file, text);
+		fs.writeFileSync(update.file, text);
 
 		io.emit ('update', newUpdate(text, update.caret, update.key));
 	});
